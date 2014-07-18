@@ -10,8 +10,8 @@ import (
 )
 
 type Todo struct {
-	Name     string `json:name`
-	Complete bool   `json:is_complete`
+	Name     string `json:"name"`
+	Complete bool   `json:"is_complete"`
 }
 
 func main() {
