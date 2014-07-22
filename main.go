@@ -7,12 +7,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os/user"
-)
 
-type Todo struct {
-	Name     string `json:"name"`
-	Complete bool   `json:"is_complete"`
-}
+	"github.com/mikespokefire/toodoo/models"
+)
 
 func main() {
 	flag.Parse()
@@ -54,7 +51,7 @@ func list() {
 		log.Fatal(err)
 	}
 
-	var todos []Todo
+	var todos []toodoo.Todo
 	json_err := json.Unmarshal(file, &todos)
 	if json_err != nil {
 		log.Fatal(json_err)
