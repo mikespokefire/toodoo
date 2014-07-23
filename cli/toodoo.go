@@ -8,7 +8,7 @@ import (
 	"log"
 	"os/user"
 
-	"github.com/mikespokefire/toodoo/models"
+	"github.com/mikespokefire/toodoo"
 )
 
 func main() {
