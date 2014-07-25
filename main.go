@@ -6,8 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/user"
+	"text/template"
 )
+
+const todoTemplate = "[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}\n"
 
 type Todo struct {
 	Name     string `json:"name"`
@@ -60,7 +64,17 @@ func list() {
 		log.Fatal(json_err)
 	}
 
-	fmt.Printf("%#v\n", todos)
+	t, err := template.New("todoTemplate").Parse(todoTemplate)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, todo := range todos {
+		err := t.Execute(os.Stdout, todo)
+		if err != nil {
+			log.Println("executing template:", err)
+		}
+	}
 }
 
 func add() {
