@@ -18,6 +18,8 @@ type Todo struct {
 	Complete bool   `json:"is_complete"`
 }
 
+type TodoList []*Todo
+
 func main() {
 	flag.Parse()
 
