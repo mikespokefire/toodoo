@@ -51,7 +51,7 @@ The commands are:
 	version         print the version number`)
 }
 
-func list() {
+func (todos *TodoList) Read() {
 	usr, _ := user.Current()
 	home_dir := usr.HomeDir
 
@@ -60,23 +60,30 @@ func list() {
 		log.Fatal(err)
 	}
 
-	var todos []Todo
-	json_err := json.Unmarshal(file, &todos)
+	json_err := json.Unmarshal(file, todos)
 	if json_err != nil {
 		log.Fatal(json_err)
 	}
+}
 
+func (todos *TodoList) List() {
 	t, err := template.New("todoTemplate").Parse(todoTemplate)
 	if err != nil {
 		panic(err)
 	}
 
-	for _, todo := range todos {
+	for _, todo := range *todos {
 		err := t.Execute(os.Stdout, todo)
 		if err != nil {
 			log.Println("executing template:", err)
 		}
 	}
+}
+
+func list() {
+	todos := TodoList{}
+	todos.Read()
+	todos.List()
 }
 
 func add() {
