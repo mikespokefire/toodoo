@@ -15,7 +15,8 @@ func main() {
 	case "list":
 		list()
 	case "add":
-		add()
+		name := flag.Arg(1)
+		add(name)
 	default:
 		usage()
 	}
@@ -43,6 +44,9 @@ func list() {
 	todos.List()
 }
 
-func add() {
-	fmt.Println("Need to add some stuff")
+func add(name string) {
+	todos := toodoo.New()
+	todos.Read()
+	todos.Add(name)
+	todos.Save()
 }
