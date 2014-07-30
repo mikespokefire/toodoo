@@ -65,7 +65,7 @@ func (todos *TodoList) Save() {
 	usr, _ := user.Current()
 	home_dir := usr.HomeDir
 
-	buffer, marshal_err := json.Marshal(todos)
+	buffer, marshal_err := json.MarshalIndent(todos, "", "  ")
 	if marshal_err != nil {
 		log.Fatal(marshal_err)
 	}
