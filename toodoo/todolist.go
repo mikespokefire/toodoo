@@ -9,8 +9,6 @@ import (
 	"text/template"
 )
 
-const todoTemplate = "[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}\n"
-
 type TodoList []*Todo
 
 func New() *TodoList {
@@ -25,15 +23,15 @@ func (todos *TodoList) Add(name string) {
 }
 
 func (todos *TodoList) List() {
-	t, err := template.New("todoTemplate").Parse(todoTemplate)
+	tmpl, err := template.ParseFiles("templates/todo.tmpl")
 	if err != nil {
 		panic(err)
 	}
 
 	for _, todo := range *todos {
-		err := t.Execute(os.Stdout, todo)
+		err := tmpl.ExecuteTemplate(os.Stdout, "todo.tmpl", todo)
 		if err != nil {
-			log.Println("executing template:", err)
+			panic(err)
 		}
 	}
 }
