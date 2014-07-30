@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strconv"
+
 	"github.com/mikespokefire/toodoo/toodoo"
 )
 
@@ -17,6 +19,12 @@ func main() {
 	case "add":
 		name := flag.Arg(1)
 		add(name)
+	case "remove":
+		index, err := strconv.ParseInt(flag.Arg(1), 10, 0)
+		if err != nil {
+			panic(err)
+		}
+		remove(index)
 	default:
 		usage()
 	}
@@ -48,5 +56,12 @@ func add(name string) {
 	todos := toodoo.New()
 	todos.Read()
 	todos.Add(name)
+	todos.Save()
+}
+
+func remove(index int64) {
+	todos := toodoo.New()
+	todos.Read()
+	todos.Remove(index)
 	todos.Save()
 }
