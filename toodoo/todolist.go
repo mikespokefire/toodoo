@@ -22,6 +22,12 @@ func (todos *TodoList) Add(name string) {
 	*todos = latest
 }
 
+func (todos *TodoList) Remove(index int64) {
+	latest := *todos
+	latest = append(latest[:index], latest[index+1:]...)
+	*todos = latest
+}
+
 func (todos *TodoList) List() {
 	tmpl, err := template.ParseFiles("templates/todo.tmpl")
 	if err != nil {
