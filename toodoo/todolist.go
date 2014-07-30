@@ -28,6 +28,16 @@ func (todos *TodoList) Remove(index int64) {
 	*todos = latest
 }
 
+func (todos TodoList) Complete(index int64) {
+	todo := todos[index]
+	todo.MarkAsComplete()
+}
+
+func (todos TodoList) Incomplete(index int64) {
+	todo := todos[index]
+	todo.MarkAsIncomplete()
+}
+
 func (todos *TodoList) List() {
 	tmpl, err := template.ParseFiles("templates/todo.tmpl")
 	if err != nil {
