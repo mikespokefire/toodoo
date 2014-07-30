@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/mikespokefire/toodoo/toodoo"
 )
@@ -17,7 +18,8 @@ func main() {
 	case "list":
 		list()
 	case "add":
-		name := flag.Arg(1)
+		arguments := flag.Args()[1:]
+		name := strings.Join(arguments, " ")
 		add(name)
 	case "remove":
 		index, err := strconv.ParseInt(flag.Arg(1), 10, 0)
