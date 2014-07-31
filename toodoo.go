@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -27,8 +28,11 @@ func main() {
 			panic(err)
 		}
 		remove(index)
+	case "help":
+		usage()
 	default:
 		usage()
+		os.Exit(1)
 	}
 }
 
@@ -45,6 +49,7 @@ The commands are:
 	add             add a todo
 	complete        mark a todo as complete
 	remove          remove a todo
+	help            this help message
 	version         print the version number`)
 }
 
