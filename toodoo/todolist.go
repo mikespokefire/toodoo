@@ -28,14 +28,8 @@ func (todos *TodoList) Remove(index int64) {
 	*todos = latest
 }
 
-func (todos TodoList) Complete(index int64) {
-	todo := todos[index]
-	todo.MarkAsComplete()
-}
-
-func (todos TodoList) Incomplete(index int64) {
-	todo := todos[index]
-	todo.MarkAsIncomplete()
+func (todos TodoList) Find(index int64) *Todo {
+	return todos[index]
 }
 
 func (todos *TodoList) List() {
