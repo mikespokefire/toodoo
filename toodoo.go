@@ -30,6 +30,18 @@ func main() {
 		remove(index)
 	case "help":
 		usage()
+	case "complete":
+		index, err := strconv.ParseInt(flag.Arg(1), 10, 0)
+		if err != nil {
+			panic(err)
+		}
+		complete(index)
+	case "incomplete":
+		index, err := strconv.ParseInt(flag.Arg(1), 10, 0)
+		if err != nil {
+			panic(err)
+		}
+		incomplete(index)
 	default:
 		usage()
 		os.Exit(1)
@@ -48,6 +60,7 @@ The commands are:
 	list            list your todos
 	add             add a todo
 	complete        mark a todo as complete
+	incomplete      mark a todo as incomplete
 	remove          remove a todo
 	help            this help message
 	version         print the version number`)
@@ -70,5 +83,19 @@ func remove(index int64) {
 	todos := toodoo.New()
 	todos.Read()
 	todos.Remove(index)
+	todos.Save()
+}
+
+func complete(index int64) {
+	todos := toodoo.New()
+	todos.Read()
+	todos.Complete(index)
+	todos.Save()
+}
+
+func incomplete(index int64) {
+	todos := toodoo.New()
+	todos.Read()
+	todos.Incomplete(index)
 	todos.Save()
 }
