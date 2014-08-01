@@ -42,9 +42,13 @@ func main() {
 			panic(err)
 		}
 		incomplete(index)
-	default:
+	case "":
 		usage()
 		os.Exit(1)
+	default:
+		arguments := flag.Args()[0:]
+		name := strings.Join(arguments, " ")
+		add(name)
 	}
 }
 
@@ -53,12 +57,12 @@ func usage() {
 
 Usage:
 
-	toodoo command [arguments]
+	toodoo [command|arguments]
 
 The commands are:
 
 	list            list your todos
-	add             add a todo
+	add             add a todo (add is not necessary)
 	complete        mark a todo as complete
 	incomplete      mark a todo as incomplete
 	remove          remove a todo
