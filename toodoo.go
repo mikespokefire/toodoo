@@ -42,9 +42,13 @@ func main() {
 			panic(err)
 		}
 		incomplete(index)
-	default:
+	case "":
 		usage()
 		os.Exit(1)
+	default:
+		arguments := flag.Args()[0:]
+		name := strings.Join(arguments, " ")
+		add(name)
 	}
 }
 
