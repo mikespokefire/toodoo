@@ -28,14 +28,8 @@ func (todos *TodoList) Remove(index int64) {
 	*todos = latest
 }
 
-func (todos TodoList) Complete(index int64) {
-	todo := todos[index]
-	todo.MarkAsComplete()
-}
-
-func (todos TodoList) Incomplete(index int64) {
-	todo := todos[index]
-	todo.MarkAsIncomplete()
+func (todos TodoList) Find(index int64) *Todo {
+	return todos[index]
 }
 
 func (todos *TodoList) List() {
@@ -57,10 +51,7 @@ func newTodo(name string) *Todo {
 }
 
 func (todos *TodoList) Read() {
-	usr, _ := user.Current()
-	home_dir := usr.HomeDir
-
-	file, err := ioutil.ReadFile(home_dir + "/.toodoos.json")
+	file, err := ioutil.ReadFile(saveFileLocation())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,16 +63,19 @@ func (todos *TodoList) Read() {
 }
 
 func (todos *TodoList) Save() {
-	usr, _ := user.Current()
-	home_dir := usr.HomeDir
-
 	buffer, marshal_err := json.MarshalIndent(todos, "", "  ")
 	if marshal_err != nil {
 		log.Fatal(marshal_err)
 	}
 
-	err := ioutil.WriteFile(home_dir+"/.toodoos.json", buffer, 0644)
+	err := ioutil.WriteFile(saveFileLocation(), buffer, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func saveFileLocation() string {
+	usr, _ := user.Current()
+	home_dir := usr.HomeDir
+	return home_dir + "/.toodoos.json"
 }

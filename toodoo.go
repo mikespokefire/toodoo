@@ -89,13 +89,13 @@ func remove(index int64) {
 func complete(index int64) {
 	todos := toodoo.New()
 	todos.Read()
-	todos.Complete(index)
+	todos.Find(index).MarkAsComplete()
 	todos.Save()
 }
 
 func incomplete(index int64) {
 	todos := toodoo.New()
 	todos.Read()
-	todos.Incomplete(index)
+	todos.Find(index).MarkAsIncomplete()
 	todos.Save()
 }
