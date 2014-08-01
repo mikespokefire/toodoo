@@ -9,6 +9,9 @@ import (
 	"text/template"
 )
 
+const todoTemplate = `[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}
+`
+
 type TodoList []*Todo
 
 func New() *TodoList {
@@ -33,13 +36,13 @@ func (todos TodoList) Find(index int64) *Todo {
 }
 
 func (todos *TodoList) List() {
-	tmpl, err := template.ParseFiles("templates/todo.tmpl")
+	tmpl, err := template.New("todo").Parse(todoTemplate)
 	if err != nil {
 		panic(err)
 	}
 
 	for _, todo := range *todos {
-		err := tmpl.ExecuteTemplate(os.Stdout, "todo.tmpl", todo)
+		err := tmpl.Execute(os.Stdout, todo)
 		if err != nil {
 			panic(err)
 		}
