@@ -52,13 +52,11 @@ func newTodo(name string) *Todo {
 
 func (todos *TodoList) Read() {
 	file, err := ioutil.ReadFile(saveFileLocation())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	json_err := json.Unmarshal(file, todos)
-	if json_err != nil {
-		log.Fatal(json_err)
+	if err == nil {
+		json_err := json.Unmarshal(file, todos)
+		if json_err != nil {
+			log.Fatal(json_err)
+		}
 	}
 }
 
