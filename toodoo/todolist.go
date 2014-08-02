@@ -9,8 +9,8 @@ import (
 	"text/template"
 )
 
-const todoTemplate = `[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}
-`
+const todoTemplate = `{{ range .Todos }}[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}
+{{ end }}`
 
 type TodoList struct {
 	Todos []Todo
@@ -31,14 +31,12 @@ func (list *TodoList) Find(index int64) *Todo {
 func (list *TodoList) List() {
 	tmpl, err := template.New("todo").Parse(todoTemplate)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	for _, todo := range list.Todos {
-		err := tmpl.Execute(os.Stdout, todo)
-		if err != nil {
-			panic(err)
-		}
+	template_err := tmpl.Execute(os.Stdout, list)
+	if template_err != nil {
+		log.Fatal(template_err)
 	}
 }
 
