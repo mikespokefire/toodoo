@@ -71,34 +71,34 @@ The commands are:
 }
 
 func list() {
-	todos := toodoo.New()
+	todos := toodoo.TodoList{}
 	todos.Read()
 	todos.List()
 }
 
 func add(name string) {
-	todos := toodoo.New()
+	todos := toodoo.TodoList{}
 	todos.Read()
 	todos.Add(name)
 	todos.Save()
 }
 
 func remove(index int64) {
-	todos := toodoo.New()
+	todos := toodoo.TodoList{}
 	todos.Read()
 	todos.Remove(index)
 	todos.Save()
 }
 
 func complete(index int64) {
-	todos := toodoo.New()
+	todos := toodoo.TodoList{}
 	todos.Read()
 	todos.Find(index).MarkAsComplete()
 	todos.Save()
 }
 
 func incomplete(index int64) {
-	todos := toodoo.New()
+	todos := toodoo.TodoList{}
 	todos.Read()
 	todos.Find(index).MarkAsIncomplete()
 	todos.Save()
