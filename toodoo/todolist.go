@@ -9,43 +9,34 @@ import (
 	"text/template"
 )
 
-const todoTemplate = `[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}
-`
+const todoTemplate = `{{ range .Todos }}[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}
+{{ end }}`
 
-type TodoList []*Todo
-
-func New() *TodoList {
-	todos := new(TodoList)
-	return todos
+type TodoList struct {
+	Todos []Todo
 }
 
-func (todos *TodoList) Add(name string) {
-	latest := *todos
-	latest = append(latest, newTodo(name))
-	*todos = latest
+func (list *TodoList) Add(name string) {
+	list.Todos = append(list.Todos, *newTodo(name))
 }
 
-func (todos *TodoList) Remove(index int64) {
-	latest := *todos
-	latest = append(latest[:index], latest[index+1:]...)
-	*todos = latest
+func (list *TodoList) Remove(index int64) {
+	list.Todos = append(list.Todos[:index], list.Todos[index+1:]...)
 }
 
-func (todos TodoList) Find(index int64) *Todo {
-	return todos[index]
+func (list *TodoList) Find(index int64) *Todo {
+	return &list.Todos[index]
 }
 
-func (todos *TodoList) List() {
+func (list *TodoList) List() {
 	tmpl, err := template.New("todo").Parse(todoTemplate)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	for _, todo := range *todos {
-		err := tmpl.Execute(os.Stdout, todo)
-		if err != nil {
-			panic(err)
-		}
+	template_err := tmpl.Execute(os.Stdout, list)
+	if template_err != nil {
+		log.Fatal(template_err)
 	}
 }
 
@@ -53,18 +44,21 @@ func newTodo(name string) *Todo {
 	return &Todo{name, false}
 }
 
-func (todos *TodoList) Read() {
+func (list *TodoList) Read() {
 	file, err := ioutil.ReadFile(saveFileLocation())
+	todos := new([]Todo)
 	if err == nil {
 		json_err := json.Unmarshal(file, todos)
 		if json_err != nil {
 			log.Fatal(json_err)
 		}
+
+		list.Todos = *todos
 	}
 }
 
-func (todos *TodoList) Save() {
-	buffer, marshal_err := json.MarshalIndent(todos, "", "  ")
+func (list *TodoList) Save() {
+	buffer, marshal_err := json.MarshalIndent(list.Todos, "", "  ")
 	if marshal_err != nil {
 		log.Fatal(marshal_err)
 	}
