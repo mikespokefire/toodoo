@@ -9,7 +9,7 @@ import (
 	"text/template"
 )
 
-const todoTemplate = `{{ range .Todos }}[{{ with .Complete }}✔{{ else }} {{ end }}] {{ .Name }}
+const todoTemplate = `{{ range $i, $t := .Todos }}{{ $i | printf "%4d" }} | [{{ with $t.Complete }}✔{{ else }} {{ end }}] {{ $t.Name }}
 {{ end }}`
 
 type TodoList struct {
