@@ -11,23 +11,24 @@ import (
 )
 
 func main() {
+	listName := flag.String("list", "default", "The todo list that you want to manipulate")
 	flag.Parse()
 
 	cmd := flag.Arg(0)
 
 	switch cmd {
 	case "list":
-		list()
+		list(*listName)
 	case "add":
 		arguments := flag.Args()[1:]
 		name := strings.Join(arguments, " ")
-		add(name)
+		add(*listName, name)
 	case "remove":
 		index, err := strconv.ParseInt(flag.Arg(1), 10, 0)
 		if err != nil {
 			panic(err)
 		}
-		remove(index)
+		remove(*listName, index)
 	case "help":
 		usage()
 	case "complete":
@@ -35,20 +36,20 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		complete(index)
+		complete(*listName, index)
 	case "incomplete":
 		index, err := strconv.ParseInt(flag.Arg(1), 10, 0)
 		if err != nil {
 			panic(err)
 		}
-		incomplete(index)
+		incomplete(*listName, index)
 	case "":
 		usage()
 		os.Exit(1)
 	default:
 		arguments := flag.Args()[0:]
 		name := strings.Join(arguments, " ")
-		add(name)
+		add(*listName, name)
 	}
 }
 
@@ -70,35 +71,45 @@ The commands are:
 	version         print the version number`)
 }
 
-func list() {
-	todos := toodoo.TodoList{}
+func list(listName string) {
+	todos := toodoo.TodoList{
+		Name: listName,
+	}
 	todos.Read()
 	todos.List()
 }
 
-func add(name string) {
-	todos := toodoo.TodoList{}
+func add(listName string, name string) {
+	todos := toodoo.TodoList{
+		Name: listName,
+	}
 	todos.Read()
 	todos.Add(name)
 	todos.Save()
 }
 
-func remove(index int64) {
-	todos := toodoo.TodoList{}
+func remove(listName string, index int64) {
+	todos := toodoo.TodoList{
+		Name: listName,
+	}
 	todos.Read()
 	todos.Remove(index)
 	todos.Save()
 }
 
-func complete(index int64) {
-	todos := toodoo.TodoList{}
+func complete(listName string, index int64) {
+	todos := toodoo.TodoList{
+		Name: listName,
+	}
 	todos.Read()
 	todos.Find(index).MarkAsComplete()
 	todos.Save()
 }
 
-func incomplete(index int64) {
-	todos := toodoo.TodoList{}
+func incomplete(listName string, index int64) {
+	todos := toodoo.TodoList{
+		Name: listName,
+	}
 	todos.Read()
 	todos.Find(index).MarkAsIncomplete()
 	todos.Save()

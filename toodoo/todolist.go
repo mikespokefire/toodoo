@@ -13,6 +13,7 @@ const todoTemplate = `{{ range .Todos }}[{{ with .Complete }}✔{{ else }} {{ en
 {{ end }}`
 
 type TodoList struct {
+	Name  string
 	Todos []Todo
 }
 
@@ -45,7 +46,7 @@ func newTodo(name string) *Todo {
 }
 
 func (list *TodoList) Read() {
-	file, err := ioutil.ReadFile(saveFileLocation())
+	file, err := ioutil.ReadFile(saveFileLocation(list))
 	todos := new([]Todo)
 	if err == nil {
 		json_err := json.Unmarshal(file, todos)
@@ -63,14 +64,22 @@ func (list *TodoList) Save() {
 		log.Fatal(marshal_err)
 	}
 
-	err := ioutil.WriteFile(saveFileLocation(), buffer, 0644)
+	err := ioutil.WriteFile(saveFileLocation(list), buffer, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func saveFileLocation() string {
+func saveFileLocation(list *TodoList) string {
 	usr, _ := user.Current()
 	home_dir := usr.HomeDir
-	return home_dir + "/.toodoos.json"
+	base_dir := home_dir + "/.toodoos"
+	file_path := base_dir + "/" + list.Name + ".json"
+
+	err := os.MkdirAll(base_dir, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return file_path
 }
