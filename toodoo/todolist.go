@@ -7,10 +7,15 @@ import (
 	"os"
 	"os/user"
 	"text/template"
+
+	"github.com/fatih/color"
 )
 
-const todoTemplate = `{{ range $i, $t := .Todos }}{{ $i | printf "%4d" }} | [{{ with $t.Complete }}✔{{ else }} {{ end }}] {{ $t.Name }}
+const todoTemplate = `{{ range $i, $t := .Todos }}{{ $i | printf "%4d" }} | [{{ with $t.Complete }}✔{{ else }} {{ end }}] {{ yellow $t.Name }}
 {{ end }}`
+
+var yellow = color.New(color.FgYellow).SprintFunc()
+var templateFunctions = template.FuncMap{"yellow": yellow}
 
 type TodoList struct {
 	Name  string
@@ -30,7 +35,7 @@ func (list *TodoList) Find(index int64) *Todo {
 }
 
 func (list *TodoList) List() {
-	tmpl, err := template.New("todo").Parse(todoTemplate)
+	tmpl, err := template.New("todo").Funcs(templateFunctions).Parse(todoTemplate)
 	if err != nil {
 		log.Fatal(err)
 	}
